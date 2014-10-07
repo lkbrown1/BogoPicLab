@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 	public void takeAPhoto() {
 		// TODO: Create an intent with the action
 		// MediaStore.ACTION_IMAGE_CAPTURE
-		
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// ComponentName cn = new ComponentName("es.softwareprocess.bogopicgen",
 		// "es.softwareprocess.bogopicgen.BogoPicGenActivity");
 		// ComponentName cn = new ComponentName("com.android.camera",
@@ -66,22 +66,37 @@ public class MainActivity extends Activity {
 		imageFileUri = Uri.fromFile(imageFile);
 
 		// TODO: Put in the intent in the tag MediaStore.EXTRA_OUTPUT the URI
-		
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
 		// TODO: Start the activity (expecting a result), with the code
 		// CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
+		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 		
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO: Handle the results from CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
-		
 		// TODO: Handle the cases for RESULT_OK, RESULT_CANCELLED, and others
-		
 		// When the result is OK, set text "Photo OK!" in the status
 		//		and set the image in the Button with:
 		//		button.setImageDrawable(Drawable.createFromPath(imageFileUri.getPath()));
 		// When the result is CANCELLED, set text "Photo canceled" in the status
 		// Otherwise, set text "Not sure what happened!" with the resultCode
-		
+		Intent intent = new Intent(MediaStore.EXTRA_OUTPUT);
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
+			TextView tv = (TextView) findViewById(R.id.status);
+			if (resultCode == RESULT_OK){
+				tv.setText("Photo Accepted!");
+				intent.putExtra(MediaStore.EXTRA_OUTPUT,"Photo was Accepted");
+				ImageButton button = (ImageButton) findViewById(R.id.TakeAPhoto);
+				button.setImageDrawable(Drawable.createFromPath(imageFileUri.getPath()));
+			} else if(resultCode == RESULT_CANCELED){
+				tv.setText("Photo Canceled");
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, "PHOTO WAS CANCELLED");
+				
+			} else{
+				tv.setText("Not sure What Happened!");
+				//test woah brah
+			}
+		}
 	}
 }
